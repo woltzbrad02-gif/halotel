@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="sw">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halotel - Ombi la Mkopo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html,
+        body {
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+            overflow-x: hidden;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            min-height: 100vh;
+        }
+        
+        header {
+            width: 100%;
+            max-width: 480px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+        
+        .back-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #333;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        
+        .back-btn:hover {
+            background: #f0f0f0;
+        }
+        
+        .logo-img {
+            height: 35px;
+            object-fit: contain;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 30px 24px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .form-title {
+            font-size: 26px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .progress-bar {
+            width: 180px;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin: 15px auto;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            width: 66%;
+            height: 100%;
+            background: linear-gradient(to right, #ff6600, #e05500);
+        }
+        
+        .step-text {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        
+        .name-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .name-group>div {
+            flex: 1;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            border-color: #ff6600;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.1);
+        }
+        
+        .invalid {
+            border-color: #e74c3c !important;
+            background-color: #fff8f8;
+        }
+        
+        .phone-group {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 0 16px;
+            margin-bottom: 6px;
+            transition: all 0.3s;
+        }
+        
+        .phone-group:focus-within {
+            border-color: #ff6600;
+            box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.1);
+        }
+        
+        .phone-group.invalid {
+            border-color: #e74c3c !important;
+            background-color: #fff8f8;
+        }
+        
+        .phone-prefix {
+            color: #ff6600;
+            font-size: 16px;
+            margin-right: 10px;
+            font-weight: 700;
+        }
+        
+        .phone-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 14px 0;
+            font-size: 16px;
+            background: transparent;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .prev-btn,
+        .next-btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+        
+        .prev-btn:active,
+        .next-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .prev-btn {
+            background: #eee;
+            color: #555;
+        }
+        
+        .prev-btn:hover {
+            background: #e2e2e2;
+        }
+        
+        .next-btn {
+            background: linear-gradient(to right, #ff6600, #e05500);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
+        }
+        
+        .next-btn:hover {
+            opacity: 0.95;
+        }
+        /* Message Banner Styling */
+        
+        .toast-banner {
+            display: none;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.4;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .toast-error {
+            background-color: #fde8e8;
+            color: #9b1c1c;
+            border: 1px solid #f8b4b4;
+        }
+        
+        .toast-success {
+            background-color: #def7ec;
+            color: #03543f;
+            border: 1px solid #84e1bc;
+        }
+        
+        .toast-info {
+            background-color: #e1effe;
+            color: #1e429f;
+            border: 1px solid #a4cafe;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        footer {
+            padding: 15px;
+            color: #aaa;
+            font-size: 13px;
+            text-align: center;
+            width: 100%;
+            max-width: 480px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <button class="back-btn" id="headerBackBtn" title="Rudi nyuma">←</button>
+        <img class="logo-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGt3VB_WtrYNUD0gcLSejZvKr1J2IOTeQJwRAbtZLR5w&s=10" alt="Halotel Logo" onerror="this.onerror=null; this.src='https://placehold.co/120x35/ff6600/ffffff?text=Halotel';">
+        <div style="width: 36px;"></div>
+    </header>
+
+    <main class="card">
+        <h1 class="form-title">Ombi la Mkopo</h1>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        <div class="step-text">Hatua ya 2 kati ya 3</div>
+
+        <!-- Notification Banner -->
+        <div id="toastBanner" class="toast-banner"></div>
+
+        <div class="name-group">
+            <div>
+                <label class="form-label" for="firstName">Jina la Kwanza</label>
+                <input type="text" class="form-input" id="firstName" placeholder="Juma">
+            </div>
+            <div>
+                <label class="form-label" for="lastName">Jina la Mwisho</label>
+                <input type="text" class="form-input" id="lastName" placeholder="Ali">
+            </div>
+        </div>
+
+        <label class="form-label" for="email">Anwani ya Barua Pepe (Email)</label>
+        <input type="email" class="form-input" id="email" placeholder="juma.ali@example.com" style="margin-bottom:20px;">
+
+        <label class="form-label" for="phone">Nambari ya Simu</label>
+        <div class="phone-group" id="phoneGroup">
+            <span class="phone-prefix">+255</span>
+            <input type="tel" class="phone-input" id="phone" placeholder="621234567" maxlength="9">
+        </div>
+        <small style="color:#888; display:block; margin-bottom:24px; font-size:12px;">Ingiza tarakimu 9 (mf. 621234567 au 751234567)</small>
+
+        <div class="btn-group">
+            <button class="prev-btn" id="prevBtn">ILIYOPITA</button>
+            <button class="next-btn" id="nextBtn">HATUA INAYOFUATA</button>
+        </div>
+    </main>
+
+    <footer>© 2026 Halotel Tanzania. Haki zote zimehifadhiwa.</footer>
+
+    <script>
+        function showBanner(message, type = 'error') {
+            const banner = document.getElementById('toastBanner');
+            banner.className = `toast-banner toast-${type}`;
+            banner.innerText = message;
+            banner.style.display = 'block';
+            banner.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest'
+            });
+        }
+
+        function hideBanner() {
+            const banner = document.getElementById('toastBanner');
+            banner.style.display = 'none';
+        }
+
+        // Load pre-filled data if exists
+        if (localStorage.getItem('firstName')) document.getElementById('firstName').value = localStorage.getItem('firstName');
+        if (localStorage.getItem('lastName')) document.getElementById('lastName').value = localStorage.getItem('lastName');
+        if (localStorage.getItem('email')) document.getElementById('email').value = localStorage.getItem('email');
+        if (localStorage.getItem('phone')) document.getElementById('phone').value = localStorage.getItem('phone');
+
+        // Navigation actions
+        document.getElementById('headerBackBtn').addEventListener('click', function() {
+            showBanner('Umerudi kwenye hatua iliyopita.', 'info');
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', function() {
+            showBanner('Umerudi kwenye hatua ya 1 ya maombi.', 'info');
+        });
+
+        // Form submission handling & redirection to summary.html
+        document.getElementById('nextBtn').addEventListener('click', function() {
+            hideBanner();
+
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+
+            // Reset error highlights
+            document.querySelectorAll('.form-input, #phoneGroup').forEach(el => el.classList.remove('invalid'));
+
+            let errors = [];
+
+            if (!firstName) {
+                document.getElementById('firstName').classList.add('invalid');
+                errors.push('Jina la kwanza linahitajika');
+            }
+            if (!lastName) {
+                document.getElementById('lastName').classList.add('invalid');
+                errors.push('Jina la mwisho linahitajika');
+            }
+            if (!email || !email.includes('@') || !email.includes('.')) {
+                document.getElementById('email').classList.add('invalid');
+                errors.push('Barua pepe si sahihi');
+            }
+            if (!phone || phone.length !== 9 || !/^\d+$/.test(phone)) {
+                document.getElementById('phoneGroup').classList.add('invalid');
+                errors.push('Nambari ya simu lazima iwe na tarakimu 9');
+            }
+
+            if (errors.length > 0) {
+                showBanner('Tafadhali rekebisha makosa yafuatayo:\n' + errors.join('\n'), 'error');
+                return;
+            }
+
+            // Save form values to localStorage
+            localStorage.setItem('firstName', firstName);
+            localStorage.setItem('lastName', lastName);
+            localStorage.setItem('email', email);
+            localStorage.setItem('phone', phone);
+
+            showBanner('✔ Taarifa zimehifadhiwa kikamilifu! Unahamishiwa...', 'success');
+
+            // Redirect to summary.html after a brief delay so the user sees the success message
+            setTimeout(() => {
+                window.location.href = 'summary.html';
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>
